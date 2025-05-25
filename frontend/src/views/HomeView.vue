@@ -17,7 +17,7 @@ const balance = ref("");
 const chatresponse = ref([]);
 const content = ref("");
 const sessionid = ref("");
-
+const url = "http://192.168.10.107:8000/"
 // اسکرول به پایین چت
 const endOfChat = ref(null);
 function scrollToBottom() {
@@ -34,7 +34,7 @@ const axiosConfig = {
 // ارسال پیام در سشن موجود
 async function sendmessage() {
 	try {
-		await axios.post("http://127.0.0.1:8000/chat/", {
+		await axios.post(url + "/chat/", {
 			content: content.value,
 			sessionid: sessionid.value,
 		}, axiosConfig);
@@ -51,7 +51,7 @@ async function sendmessage() {
 async function sendfirstmessage() {
 	try {
 		const sessionResp = await axios.post(
-			"http://127.0.0.1:8000/session/create/",
+			url + "/session/create/",
 			{ title: content.value },
 			axiosConfig
 		);
@@ -68,15 +68,15 @@ async function getandsetdata() {
 		return router.push("login");
 	}
 	try {
-		const userResp = await axios.get("http://127.0.0.1:8000/whoami/", axiosConfig);
+		const userResp = await axios.get(url + "/whoami/", axiosConfig);
 		if (!userResp.data.username) return router.push("login");
 
 		username.value = userResp.data.username;
 		email.value = userResp.data.email;
-		picture.value = "http://127.0.0.1:8000" + userResp.data.image.image;
+		picture.value = url + "" + userResp.data.image.image;
 		balance.value = userResp.data.balance;
 
-		const chatResp = await axios.get("http://127.0.0.1:8000/chats/", axiosConfig);
+		const chatResp = await axios.get(url + "/chats/", axiosConfig);
 		if (chatResp.data.length > 0) {
 			chatresponse.value = chatResp.data[0].messages;
 			sessionid.value = chatResp.data[0].id;
@@ -109,11 +109,8 @@ defineExpose({ getandsetdata, sendmessage, scrollToBottom });
 		<!-- ارسال پیام -->
 		<div class="container mx-auto fixed bottom-0">
 			<div class="rounded-2xl border-gray-700 bg-white border mb-3 shadow-2xl mx-auto w-100 md:w-150 lg:w-200">
-				<textarea
-					v-model="content"
-					placeholder="...سوالت رو بپرس"
-					class="h-full w-full mr-3 mt-3 px-4 py-2 text-right"
-				></textarea>
+				<textarea v-model="content" placeholder="...سوالت رو بپرس"
+					class="h-full w-full mr-3 mt-3 px-4 py-2 text-right"></textarea>
 				<div class="text-right px-4 pb-3">
 					<button @click="sendmessage" class="px-4 py-1 bg-gray-200 rounded font-bold">ارسال</button>
 				</div>
@@ -123,24 +120,23 @@ defineExpose({ getandsetdata, sendmessage, scrollToBottom });
 
 	<!-- وقتی هنوز چتی وجود نداره -->
 	<template v-else>
-		<div class="text-center p-16">
-			<h1 class="text-4xl md:text-5xl">هر سوالی داری می‌تونی از من بپرسی</h1>
-		</div>
-
-		<div class="container mx-auto">
-			<div class="rounded-2xl border-gray-700 shadow-2xl mx-auto w-100 md:w-150 lg:w-200">
-				<textarea
-					v-model="content"
-					placeholder="...سوالت رو بپرس"
-					class="h-full w-full mr-3 mt-3 px-4 py-2 text-right"
-				></textarea>
-				<div class="text-right px-4 pb-3">
-					<button @click="sendfirstmessage" class="px-4 py-1 bg-gray-200 rounded font-bold">ارسال</button>
-				</div>
+		<div class="columns-1 w-screen">
+			<div class="text-center p-16">
+				<h1 class="text-4xl md:text-5xl">هر سوالی داری می‌تونی از من بپرسی</h1>
 			</div>
-			<p class="text-center mt-10 text-gray-400">
-				با پیام دادن به من، شما <a href="#" class="underline">شرایط و قوانین</a> رو قبول می‌کنید.
-			</p>
+
+			<div class="container mx-auto content-center">
+				<div class="rounded-2xl border-gray-700 shadow-2xl mx-auto w-100 md:w-150 lg:w-200">
+					<textarea v-model="content" placeholder="...سوالت رو بپرس"
+						class="h-full w-full mr-3 mt-3 px-4 py-2 text-right"></textarea>
+					<div class="text-right px-4 pb-3">
+						<button @click="sendfirstmessage" class="px-4 py-1 bg-gray-200 rounded font-bold">ارسال</button>
+					</div>
+				</div>
+				<p class="text-center mt-10 text-gray-400">
+					با پیام دادن به من، شما <a href="#" class="underline">شرایط و قوانین</a> رو قبول می‌کنید.
+				</p>
+			</div>
 		</div>
 	</template>
 </template>

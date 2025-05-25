@@ -28,7 +28,7 @@ SECRET_KEY = "django-insecure-iy=*m=*1g(8lqrnvojw*b&n55r4vb&y$(&!&30lt5vtt@r3q*(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["192.168.10.107"]
 
 
 # Application definition
@@ -157,3 +157,4 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER": timedelta(days=1),
     "SLIDING_TOKEN_LIFETIME_LATE_USER": timedelta(days=30),
 }
+OPENAI_API_KEY  =  "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"

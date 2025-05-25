@@ -57,4 +57,4 @@ class ChatMessage(models.Model):
         ordering = ["created_at"]
 
     def __str__(self):
-        return f"[{self.role}] {self.content[:30]}"
+        return f"[{self.role}] {self.content[:30]} {self.session}"

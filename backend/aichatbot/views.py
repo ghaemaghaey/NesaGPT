@@ -5,8 +5,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .pricecheck import pricecheckforapi
 from . import models
+from django.conf import settings
 from django.shortcuts import HttpResponse
-
+from requests import get,post
+from openai import OpenAI
 from rest_framework import viewsets, permissions
 from .models import ChatSession,ChatMessage
 from .serializers import ChatSessionSerializer
@@ -55,9 +57,15 @@ class sendchat(APIView):
         session = ChatSession.objects.get(id=sessinid)
         print(content)
         ChatMessage.objects.create(role="user",session = session,content=content)
-        return HttpResponse('Success')
+        clinet = OpenAI(api_key=settings.OPENAI_API_KEY)
+        print(settings.OPENAI_API_KEY)
+        openaiResponse = clinet.responses.create(
+            model='gpt-4-turbo',
+            input=content
+        )
+        ChatMessage.objects.create(role="assistant",session=session,content=openaiResponse.output_text)
         # here we write the api connection data
-
+        return Response({"result":"sucess"})
 
         
 class newChatSession(APIView):

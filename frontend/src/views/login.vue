@@ -8,6 +8,7 @@ const password = ref('')
 const error = ref('')
 const animation = ref('')
 animation.value = true
+const url = "http://192.168.10.107:8000/"
 import axios from 'axios';
 async function  login (){
     animation.value = false
@@ -16,7 +17,7 @@ async function  login (){
         "username": username.value,
         "password": password.value,
     }
-    const resp = await axios.post('http://127.0.0.1:8000/api/token/',data).catch(()=>{
+    const resp = await axios.post(url+'/api/token/',data).catch(()=>{
         error.value = true
         animation.value = true
     })
