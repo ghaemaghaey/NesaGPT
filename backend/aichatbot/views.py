@@ -67,13 +67,13 @@ class sendchat(APIView):
         # here we write the api connection data
         return Response({"result":"sucess"})
 
-        
+
 class newChatSession(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def post (self, request):
+    def post(self, request):
         this_user = request.user
-        this_title = request.data.get('title')
-        session =  ChatSession.objects.create(user=this_user, title=this_title)
-        return Response({'result': "ok","sessionid":session.id})
+        this_title = request.data.get("title")
+        session = ChatSession.objects.create(user=this_user, title=this_title)
+        return Response({"result": "ok", "sessionid": session.id})
