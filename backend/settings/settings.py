@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from datetime import timedelta
+from dotenv import load_dotenv
 import os
 
 from pathlib import Path
@@ -18,17 +19,18 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-iy=*m=*1g(8lqrnvojw*b&n55r4vb&y$(&!&30lt5vtt@r3q*("
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.10.107"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -92,7 +94,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "mydb",
         "USER": "postgres",
-        "PASSWORD": "ghaemaghaey",
+        "PASSWORD": os.getenv("DATABASE_PASS"),
         "HOST": "localhost",
         "PORT": "5432",
     }
@@ -157,4 +159,4 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER": timedelta(days=1),
     "SLIDING_TOKEN_LIFETIME_LATE_USER": timedelta(days=30),
 }
-OPENAI_API_KEY  =  "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"
+OPENAI_API_KEY = os.getenv("OPEN_AI_API_KEY")
