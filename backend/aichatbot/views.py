@@ -1,18 +1,16 @@
-from django.shortcuts import render
+from django.conf import settings
+
+from rest_framework import  status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .pricecheck import pricecheckforapi
-from . import models
-from django.conf import settings
-from django.shortcuts import HttpResponse
-from requests import get, post
+
 from openai import OpenAI
-from rest_framework import viewsets, permissions, status
-from .models import ChatSession, ChatMessage, Balance, Profile
+
+from .models import ChatSession, ChatMessage, Balance
 from .serializers import ChatSessionSerializer, UserSerializer
-from .pricecheck import pricecheckforapi
+from .service import pricecheckforapi
 
 
 # Create your views here.
@@ -27,10 +25,10 @@ class chat(APIView):
         this_user = request.user
         input_price = pricecheckforapi(this_prompt, 4)
         input_price = round(input_price)
-        this_balance = models.Balance.objects.get(user=this_user)
+        this_balance = Balance.objects.get(user=this_user)
         this_balance.wallet = this_balance.wallet - input_price - outputprice
         this_balance.save()
-        sessions = models.ChatSession.objects.filter(user=this_user)
+        sessions = ChatSession.objects.filter(user=this_user)
         for session in sessions:
             data["sessions"].append(session.title)
         data.update({"wallet": this_balance.wallet})
